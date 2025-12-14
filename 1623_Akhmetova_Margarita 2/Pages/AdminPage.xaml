@@ -1,0 +1,150 @@
+﻿<Page x:Class="Main.Pages.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Администратор"
+      IsVisibleChanged="Page_IsVisibleChanged">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Grid.Row="0"
+                Padding="14"
+                CornerRadius="8"
+                Background="{StaticResource BrushBgSecondary}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Панель администратора"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="Раздел управления (визуальная заготовка)"
+                               Margin="0,6,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="Выйти"
+                        ToolTip="Завершить сеанс (логика будет добавлена позднее)"
+                        Margin="10,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Контент -->
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Левая панель -->
+            <Border Grid.Column="0"
+                    Padding="14"
+                    CornerRadius="8"
+                    Background="{StaticResource BrushBgSecondary}">
+                <StackPanel>
+                    <TextBlock Text="Действия"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0,0,0,10"/>
+
+                    <Button Content="Добавить пользователя"
+                            ToolTip="Открыть страницу добавления пользователя"
+                            Click="ButtonAdd_Click"/>
+
+                    <Button Content="Редактировать пользователя"
+                            ToolTip="Редактирование выбранной записи (позже)"/>
+                    <Button Name="ButtonDel"
+        Content="Удалить"
+        ToolTip="Удалить выбранные записи (с подтверждением)"
+        Click="ButtonDel_Click"/>
+
+
+                    <TextBlock Text="Поиск"
+                               FontWeight="Bold"
+                               Margin="0,16,0,6"/>
+                    <TextBox ToolTip="Поиск по логину/ФИО (позже)"/>
+
+                    <Button Content="Применить фильтр"
+                            ToolTip="Фильтрация (позже)"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Правая часть: таблица-заглушка -->
+            <Border Grid.Column="2"
+                    Padding="14"
+                    CornerRadius="8"
+                    Background="{StaticResource BrushBgMain}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="Пользователи (визуально)"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0,0,0,10"/>
+
+                    <DataGrid Grid.Row="1"
+          Name="DataGridUser"
+          AutoGenerateColumns="False"
+          SelectionMode="Extended"
+          SelectionUnit="FullRow"
+          IsReadOnly="True"
+          CanUserAddRows="False"
+          ToolTip="Данные пользователей из базы данных">
+                        <DataGrid.Columns>
+
+                            <!-- ID НЕ отображаем -->
+
+                            <DataGridTextColumn Header="Логин"
+                            Binding="{Binding Login}"
+                            Width="160"/>
+
+                            <DataGridTextColumn Header="Пароль"
+                            Binding="{Binding Password}"
+                            Width="260"/>
+
+                            <DataGridTextColumn Header="Роль"
+                            Binding="{Binding Role}"
+                            Width="160"/>
+
+                            <DataGridTextColumn Header="Ф.И.О."
+                            Binding="{Binding FIO}"
+                            Width="240"/>
+
+                            <DataGridTextColumn Header="Фото"
+                            Binding="{Binding Photo}"
+                            Width="180"/>
+
+                            <!-- Крайний правый столбец: кнопка "Редактировать" -->
+                            <DataGridTemplateColumn Header=""
+                                Width="180">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Name="ButtonEdit"
+                            Content="Редактировать"
+                            ToolTip="Редактирование выбранной записи (будет реализовано на шаге 9)"
+                                                                    Click="ButtonEdit_Click"/>
+
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

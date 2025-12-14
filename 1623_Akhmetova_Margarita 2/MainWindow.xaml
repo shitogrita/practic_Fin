@@ -1,0 +1,59 @@
+﻿<Window x:Class="YourNamespace.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Главное окно"
+        Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="BtnBack"
+                    Grid.Column="0"
+                    Content="Назад"
+                    Width="110" Height="30"
+                    Margin="10,7,0,7"
+                    Click="BtnBack_Click"
+                    ToolTip="Возврат на предыдущую страницу" />
+
+            <!-- При необходимости: кнопка выхода вверху справа -->
+            <Button x:Name="BtnExit"
+                    Grid.Column="2"
+                    Content="Выход"
+                    Width="110" Height="30"
+                    Margin="0,7,10,7"
+                    Click="BtnExit_Click"
+                    ToolTip="Закрыть приложение" />
+        </Grid>
+
+        <!-- Центральная область: Frame для страниц -->
+
+        <Frame x:Name="MainFrame"
+               Grid.Row="1"
+               NavigationUIVisibility="Hidden"
+               Source="Pages/AuthPage.xaml"
+               Navigated="MainFrame_Navigated"/>
+
+
+        <!-- Нижняя панель: дата и время справа -->
+        <Grid Grid.Row="2">
+            <TextBlock x:Name="TbDateTime"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Margin="0,0,10,0"
+                       FontSize="14"
+                       Text="--.--.---- --:--:--" />
+        </Grid>
+    </Grid>
+</Window>

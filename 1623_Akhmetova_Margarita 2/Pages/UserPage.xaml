@@ -1,0 +1,160 @@
+﻿<Page x:Class="Main.Pages.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Пользователь">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок -->
+            <TextBlock Grid.Row="0"
+               Text="Каталог пользователей"
+               FontSize="22"
+               FontWeight="Bold"
+               Margin="0,0,0,10"/>
+
+            <!-- Панель управления: WrapPanel -->
+            <WrapPanel Grid.Row="1" VerticalAlignment="Top">
+
+                <TextBlock Text="Поиск ФИО:"
+                   VerticalAlignment="Center"
+                   Margin="0,0,8,0"/>
+
+                <TextBox x:Name="TextBoxSearch"
+                 Width="260"
+                 ToolTip="Введите часть Ф.И.О. для поиска"
+                 TextChanged="TextBoxSearch_TextChanged"
+                 Margin="0,0,16,0"/>
+
+                <TextBlock Text="Сортировка:"
+                   VerticalAlignment="Center"
+                   Margin="0,0,8,0"/>
+
+                <ComboBox x:Name="CmbSorting"
+                  Width="180"
+                  ToolTip="Выберите порядок сортировки по Ф.И.О."
+                  SelectionChanged="CmbSorting_SelectionChanged"
+                  Margin="0,0,16,0">
+                    <ComboBoxItem Content="По возрастанию"/>
+                    <ComboBoxItem Content="По убыванию"/>
+                </ComboBox>
+
+                <CheckBox x:Name="CheckUserOnly"
+                  Content="Только пользователи"
+                  ToolTip="Показывать только роль «Пользователь»"
+                  Checked="CheckUserOnly_Checked"
+                  Unchecked="CheckUserOnly_Unchecked"
+                  Margin="0,0,16,0"
+                  VerticalAlignment="Center"/>
+
+                <Button Content="Очистить фильтр"
+                ToolTip="Сбросить поиск, фильтр и сортировку к исходным значениям"
+                Click="BtnClear_Click"/>
+            </WrapPanel>
+        </Grid>
+
+
+        <!-- Контент -->
+        <!-- Контент -->
+        <Border Grid.Row="1"
+        Margin="0,16,0,0"
+        Padding="14"
+        CornerRadius="8"
+        Background="{StaticResource BrushBgMain}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                   Text="Пользователи"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+                <ListView Name="ListUser"
+                  Grid.Row="1"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  HorizontalContentAlignment="Center"
+                  ToolTip="Каталог пользователей (только просмотр)">
+
+                    <!-- Плиточная раскладка -->
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <!-- Шаблон плитки -->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="10"
+                            Padding="10"
+                            Width="470"
+                            Background="{StaticResource BrushBgSecondary}"
+                            CornerRadius="8">
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="450"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- ФИО -->
+                                    <TextBlock Grid.Row="0"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Width="450"
+                                       TextWrapping="Wrap"
+                                       Text="{Binding FIO}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="18"
+                                       FontWeight="Bold"/>
+
+                                    <!-- Фото -->
+                                    <Image Grid.Row="1"
+                                   Width="450"
+                                   Stretch="UniformToFill"
+                                   HorizontalAlignment="Center">
+                                        <Image.Source>
+                                            <Binding Path="Photo">
+                                                <Binding.TargetNullValue>
+                                                    <ImageSource>user.png</ImageSource>
+                                                </Binding.TargetNullValue>
+                                            </Binding>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <!-- Роль -->
+                                    <TextBlock Grid.Row="2"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Left"
+                                       Width="450"
+                                       HorizontalAlignment="Center"
+                                       FontSize="18"
+                                       Text="{Binding Role}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Page>
