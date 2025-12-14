@@ -18,7 +18,6 @@ namespace TransportAllVariants
         public override string ToString() => $"({I},{J})";
     }
 
-    /// <summary>DSU для предотвращения циклов при добавлении нулевых базисных клеток (устранение вырождения).</summary>
     public sealed class Dsu
     {
         private readonly int[] p;
@@ -139,7 +138,6 @@ namespace TransportAllVariants
                 double bestCost = double.PositiveInfinity;
                 int bi = -1, bj = -1;
 
-                // выбор клетки минимальной стоимости среди ещё активных строк/столбцов
                 for (int i = 0; i < M; i++)
                 {
                     if (!rowAlive[i] || a[i] < EPS) continue;
@@ -152,7 +150,6 @@ namespace TransportAllVariants
                             bestCost = c;
                             bi = i; bj = j;
                         }
-                        // при равенстве стоимости можно дополнительно выбирать клетку с большим возможным объёмом
                         else if (Math.Abs(c - bestCost) < EPS)
                         {
                             double capOld = Math.Min(a[bi], b[bj]);
@@ -182,18 +179,15 @@ namespace TransportAllVariants
             return p;
         }
 
-        /// <summary>Добор базиса до m+n-1 нулевыми перевозками без образования циклов в двудольном графе.</summary>
         private void EnsureNonDegenerate(Plan p)
         {
             int target = M + N - 1;
             if (p.Basis.Count >= target) return;
 
-            // DSU по вершинам: 0..M-1 (строки), M..M+N-1 (столбцы)
             var dsu = new Dsu(M + N);
             foreach (var cell in p.Basis)
                 dsu.Union(cell.I, M + cell.J);
 
-            // кандидаты по возрастанию стоимости
             var candidates = new List<Cell>();
             for (int i = 0; i < M; i++)
                 for (int j = 0; j < N; j++)
@@ -210,15 +204,12 @@ namespace TransportAllVariants
                 int r = c.I;
                 int colNode = M + c.J;
 
-                // если уже связаны, добавление ребра создаст цикл
                 if (dsu.Find(r) == dsu.Find(colNode)) continue;
 
                 p.Basis.Add(c);
-                // p.X[r, c.J] = 0; // можно не присваивать явно
                 dsu.Union(r, colNode);
             }
 
-            // страховка (в учебных задачах почти не нужна)
             while (p.Basis.Count < target)
             {
                 for (int i = 0; i < M && p.Basis.Count < target; i++)
@@ -242,7 +233,6 @@ namespace TransportAllVariants
             {
                 ComputePotentials(p, out double[] u, out double[] v);
 
-                // поиск входящей клетки (наиболее отрицательный reduced cost)
                 double bestNeg = 0.0;
                 Cell entering = new Cell(-1, -1);
 
@@ -261,14 +251,12 @@ namespace TransportAllVariants
                     }
                 }
 
-                // условие оптимальности выполнено
                 if (entering.I < 0) return p;
 
                 var loop = FindLoop(p.Basis, entering);
                 if (loop == null || loop.Count < 4)
                     throw new InvalidOperationException("Не удалось построить замкнутый контур. Проверьте корректность базиса.");
 
-                // loop: [entering, ..., entering], знаки: 0:+, 1:-, 2:+, 3:- ...
                 double theta = double.PositiveInfinity;
                 Cell leaving = new Cell(-1, -1);
 
@@ -286,7 +274,6 @@ namespace TransportAllVariants
                 if (double.IsPositiveInfinity(theta))
                     throw new InvalidOperationException("Контур некорректен: отсутствуют минусовые клетки.");
 
-                // перераспределение
                 for (int k = 0; k < loop.Count - 1; k++)
                 {
                     var c = loop[k];
@@ -294,11 +281,9 @@ namespace TransportAllVariants
                     else p.X[c.I, c.J] -= theta;
                 }
 
-                // обновление базиса
                 p.Basis.Add(entering);
                 p.Basis.Remove(leaving);
 
-                // устранение возможного вырождения
                 EnsureNonDegenerate(p);
             }
         }
@@ -308,7 +293,6 @@ namespace TransportAllVariants
             u = Enumerable.Repeat(double.NaN, M).ToArray();
             v = Enumerable.Repeat(double.NaN, N).ToArray();
 
-            // вычисление потенциалов по компонентам связности (вырождение => несколько компонент)
             for (int startRow = 0; startRow < M; startRow++)
             {
                 if (!double.IsNaN(u[startRow])) continue;
@@ -337,12 +321,10 @@ namespace TransportAllVariants
                 } while (changed);
             }
 
-            // страховка от NaN
             for (int i = 0; i < M; i++) if (double.IsNaN(u[i])) u[i] = 0.0;
             for (int j = 0; j < N; j++) if (double.IsNaN(v[j])) v[j] = 0.0;
         }
 
-        /// <summary>Поиск цикла (замкнутого контура) для entering при множестве базисных клеток.</summary>
         private List<Cell>? FindLoop(HashSet<Cell> basis, Cell start)
         {
             var allowed = new HashSet<Cell>(basis) { start };
@@ -358,7 +340,6 @@ namespace TransportAllVariants
                 colToRows[c.J].Add(c.I);
             }
 
-            // пробуем стартовать ходом по строке, затем по столбцу
             var path = new List<Cell> { start };
             if (Dfs(start, start, moveAlongRow: true, rowToCols, colToRows, allowed, path)) return path;
 
@@ -444,7 +425,6 @@ namespace TransportAllVariants
 
         private static string Fmt(double x)
         {
-            // для отчёта: если близко к целому — печатаем как целое
             double r = Math.Round(x);
             if (Math.Abs(x - r) < 1e-9) return ((long)r).ToString(Ci);
             return x.ToString("0.###", Ci);
@@ -486,7 +466,6 @@ namespace TransportAllVariants
 
         private static void Main()
         {
-            // Базовые (уникальные) наборы данных из таблицы
             var set1 = (supply: new double[] { 200, 350, 300 },
                         demand: new double[] { 270, 130, 190, 150, 110 },
                         C: new double[,]
@@ -532,7 +511,6 @@ namespace TransportAllVariants
                             {  3, 16, 10,  1,  4 }
                         });
 
-            // Соответствие вариантов (1–22) наборам данных согласно изображению
             var map = new Dictionary<int, (double[] s, double[] d, double[,] c)>
             {
                 {  1, set1 }, {  2, set2 }, {  3, set3 }, {  4, set4 }, {  5, set5 },
@@ -608,3 +586,4 @@ namespace TransportAllVariants
         }
     }
 }
+
