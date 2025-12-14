@@ -11,7 +11,6 @@
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -27,7 +26,6 @@
                     Click="BtnBack_Click"
                     ToolTip="Возврат на предыдущую страницу" />
 
-            <!-- При необходимости: кнопка выхода вверху справа -->
             <Button x:Name="BtnExit"
                     Grid.Column="2"
                     Content="Выход"
@@ -37,8 +35,6 @@
                     ToolTip="Закрыть приложение" />
         </Grid>
 
-        <!-- Центральная область: Frame для страниц -->
-
         <Frame x:Name="MainFrame"
                Grid.Row="1"
                NavigationUIVisibility="Hidden"
@@ -46,7 +42,6 @@
                Navigated="MainFrame_Navigated"/>
 
 
-        <!-- Нижняя панель: дата и время справа -->
         <Grid Grid.Row="2">
             <TextBlock x:Name="TbDateTime"
                        HorizontalAlignment="Right"
@@ -57,3 +52,4 @@
         </Grid>
     </Grid>
 </Window>
+

@@ -29,7 +29,6 @@ namespace YourNamespace
             _timer.Tick += (_, __) => TbDateTime.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
             _timer.Start();
 
-            // Пример: стартовая страница (позже замените на страницу авторизации)
             // MainFrame.Navigate(new AuthPage());
         }
 
@@ -49,7 +48,6 @@ namespace YourNamespace
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            // Подтверждение при закрытии окна стандартными средствами (крестик и т.п.)
             if (!TryCloseWithConfirmation())
             {
                 e.Cancel = true;
@@ -69,7 +67,6 @@ namespace YourNamespace
 
             if (result == MessageBoxResult.Yes)
             {
-                // Корректная остановка таймера (не обязательно, но корректно)
                 _timer?.Stop();
                 Application.Current.Shutdown();
                 return true;
@@ -82,7 +79,7 @@ namespace YourNamespace
             var page = e.Content as Page;
             if (page != null)
             {
-                Title = $"Ахметова | {page.Title}"; // фамилию можно заменить
+                Title = $"Ахметова | {page.Title}"; 
                 BtnBack.Visibility = (page.Title == "Авторизация")
                     ? Visibility.Collapsed
                     : Visibility.Visible;
@@ -90,3 +87,4 @@ namespace YourNamespace
         }
     }
 }
+
